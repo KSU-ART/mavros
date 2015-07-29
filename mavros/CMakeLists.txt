@@ -15,7 +15,6 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   std_srvs
-  tf
   tf2_ros
   angles
   libmavconn
@@ -83,6 +82,8 @@ add_message_files(
   VFR_HUD.msg
   FileEntry.msg
   ActuatorControl.msg
+  CommandCode.msg
+  ParamValue.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -102,6 +103,7 @@ add_service_files(
   CommandBool.srv
   CommandHome.srv
   CommandTOL.srv
+  CommandTriggerControl.srv
   StreamRate.srv
   SetMode.srv
   FileOpen.srv
@@ -145,7 +147,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES mavros
-  CATKIN_DEPENDS diagnostic_msgs diagnostic_updater pluginlib roscpp sensor_msgs std_msgs tf tf2_ros geometry_msgs libmavconn message_runtime eigen_conversions
+  CATKIN_DEPENDS diagnostic_msgs diagnostic_updater pluginlib roscpp sensor_msgs std_msgs tf2_ros geometry_msgs libmavconn message_runtime eigen_conversions
   DEPENDS Boost Eigen
 )
 
