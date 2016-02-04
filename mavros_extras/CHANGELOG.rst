@@ -2,6 +2,62 @@
 Changelog for package mavros_extras
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.16.5 (2016-01-11)
+-------------------
+
+0.16.4 (2015-12-14)
+-------------------
+
+0.16.3 (2015-11-19)
+-------------------
+
+0.16.2 (2015-11-17)
+-------------------
+
+0.16.1 (2015-11-13)
+-------------------
+
+0.16.0 (2015-11-09)
+-------------------
+* gcs_bridge `#394 <https://github.com/mavlink/mavros/issues/394>`_: enable both UDPROS and TCPROS transports
+* extras fix `#392 <https://github.com/mavlink/mavros/issues/392>`_: add additional subscription for PoseWithCovarianceStamped
+* Contributors: Vladimir Ermakov
+
+0.15.0 (2015-09-17)
+-------------------
+* extras `#387 <https://github.com/mavlink/mavros/issues/387>`_: fix header stamp in joint_states
+* extras fix `#387 <https://github.com/mavlink/mavros/issues/387>`_: SSP node done.
+* extras `#387 <https://github.com/mavlink/mavros/issues/387>`_: subscriber works, node almost done
+* extras `#387 <https://github.com/mavlink/mavros/issues/387>`_: load URDF
+* extras `#387 <https://github.com/mavlink/mavros/issues/387>`_: initial import of servo_status_publisher
+* Contributors: Vladimir Ermakov
+
+0.14.2 (2015-08-20)
+-------------------
+* extras: fix catkin lint warnings
+* Contributors: Vladimir Ermakov
+
+0.14.1 (2015-08-19)
+-------------------
+
+0.14.0 (2015-08-17)
+-------------------
+* extras: gcs node: replace deprecated copy function
+* extras: scripts: use API from mavros module
+* package: remove not exist dependency
+* extras: vibration: Fix message include
+* extras: px4flow: Fix message include
+* extras: cam_imu_sync: Fix message include
+* extras: update package description
+* msgs: deprecate mavros::Mavlink and copy utils.
+* msgs `#354 <https://github.com/mavlink/mavros/issues/354>`_: move all messages to mavros_msgs package.
+* opencv 3.0/2.4 header compatibility
+* fix orientation empty error
+* Contributors: Vladimir Ermakov, andre-nguyen, v01d
+
+0.13.1 (2015-08-05)
+-------------------
+
 0.13.0 (2015-08-01)
 -------------------
 * extras: mocap fix `#352 <https://github.com/mavlink/mavros/issues/352>`_: use new helper for quaternion.

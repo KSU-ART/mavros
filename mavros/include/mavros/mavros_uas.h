@@ -130,7 +130,7 @@ public:
 	/**
 	 * Update autopilot type on every HEARTBEAT
 	 */
-	void update_heartbeat(uint8_t type_, uint8_t autopilot_);
+	void update_heartbeat(uint8_t type_, uint8_t autopilot_, uint8_t base_mode_);
 
 	/**
 	 * Update autopilot connection status (every HEARTBEAT/conn_timeout)
@@ -151,6 +151,24 @@ public:
 	inline enum MAV_AUTOPILOT get_autopilot() {
 		uint8_t autopilot_ = autopilot;
 		return static_cast<enum MAV_AUTOPILOT>(autopilot_);
+	}
+
+	/**
+	 * @brief Returns arming status
+	 *
+	 * @note There may be race condition between SET_MODE and HEARTBEAT.
+	 */
+	inline bool get_armed() {
+		uint8_t base_mode_ = base_mode;
+		return base_mode_ & MAV_MODE_FLAG_SAFETY_ARMED;
+	}
+
+	/**
+	 * @brief Returns HIL status
+	 */
+	inline bool get_hil_state() {
+		uint8_t base_mode_ = base_mode;
+		return base_mode_ & MAV_MODE_FLAG_HIL_ENABLED;
 	}
 
 	/* -*- FCU target id pair -*- */
@@ -188,6 +206,12 @@ public:
 	 * @return orientation quaternion [ENU]
 	 */
 	geometry_msgs::Quaternion get_attitude_orientation();
+
+	/**
+	 * @brief Get angular velocity from IMU data
+	 * @return vector3
+	 */
+	geometry_msgs::Vector3 get_attitude_angular_velocity();
 
 
 	/* -*- GPS data -*- */
@@ -376,9 +400,7 @@ public:
 	 *
 	 * Replacement function for @a tf::getYaw()
 	 */
-	static inline double getYaw(const Eigen::Quaterniond &q) {
-		return quaternion_to_rpy(q).z();
-	}
+	static double quaternion_get_yaw(const Eigen::Quaterniond &q);
 
 	/**
 	 * @brief Store Quaternion to MAVLink float[4] format
@@ -433,11 +455,26 @@ public:
 		return transform_frame(in);
 	}
 
+	/**
+	 * @brief Transform heading from ROS to FCU frame.
+	 */
+	static inline double transform_frame_yaw_enu_ned(double yaw) {
+		return transform_frame_yaw(yaw);
+	}
+
+	/**
+	 * @brief Transform heading from FCU to ROS frame.
+	 */
+	static inline double transform_frame_yaw_ned_enu(double yaw) {
+		return transform_frame_yaw(yaw);
+	}
+
 private:
 	std::recursive_mutex mutex;
 
 	std::atomic<uint8_t> type;
 	std::atomic<uint8_t> autopilot;
+	std::atomic<uint8_t> base_mode;
 
 	uint8_t target_system;
 	uint8_t target_component;
@@ -456,5 +493,9 @@ private:
 
 	std::atomic<bool> fcu_caps_known;
 	std::atomic<uint64_t> fcu_capabilities;
+
+	static inline double transform_frame_yaw(double yaw) {
+		return -yaw;
+	}
 };
 };	// namespace mavros
