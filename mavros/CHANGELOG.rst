@@ -2,6 +2,49 @@
 Changelog for package mavros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.17.3 (2016-05-20)
+-------------------
+* libmavconn `#543 <https://github.com/mavlink/mavros/issues/543>`_: support build with mavlink 2.0 capable mavgen
+* node: Remove warning about MAVLINK_VERSION redefine
+* Fix bug with orientation in setpoint_raw plugin
+  Fixes a bug where the ned_desired_orientation was not actually passed into set_attitude_target. Instead, the desired_orientation (wrong frame) was passed.
+* Contributors: Justin Thomas, Vladimir Ermakov
+
+0.17.2 (2016-04-29)
+-------------------
+* Update README.md
+* Update README.md
+  Updated / completed examples.
+* Update README.md
+* Fix for kinetic std::isnan.
+* Contributors: James Goppert, Lorenz Meier
+
+0.17.1 (2016-03-28)
+-------------------
+* lib: Add QLAND mode of APM:Plane
+  https://github.com/mavlink/mavlink/commit/a0ed95c3a7d97a8f8d86ce3f95c4bf269f439c46
+* Update contributing guide
+  We forgot to mention uncrustify commit.
+* Treat submarine vehicles like copter vehicles
+* Contributors: Josh Villbrandt, Vladimir Ermakov
+
+0.17.0 (2016-02-09)
+-------------------
+* update README
+* rebased with master
+* Fixed ROS_BREAK
+* Updates for ROS_BREAK and code style
+* Nitpicks and uncrustify
+* Updated frame transformations and added odom publisher to local position plugin
+* Contributors: Eddy, Vladimir Ermakov, francois
+
+0.16.6 (2016-02-04)
+-------------------
+* node fix `#494 <https://github.com/mavlink/mavros/issues/494>`_: Report FCU firmware type in rosonsole log
+* scripts fix `#478 <https://github.com/mavlink/mavros/issues/478>`_: Remove guided_enable garbage.
+  I'm missed this when do `#407 <https://github.com/mavlink/mavros/issues/407>`_.
+* Contributors: Vladimir Ermakov
+
 0.16.5 (2016-01-11)
 -------------------
 * scripts: mavwp `#465 <https://github.com/mavlink/mavros/issues/465>`_: Remove WaypointGOTO from scrips and python library

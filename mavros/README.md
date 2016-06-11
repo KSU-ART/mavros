@@ -10,7 +10,7 @@ ROS API documentation moved to [wiki.ros.org][wiki].
 Features
 --------
 
-  - Communication with autopilot via serial port, UDP or TCP (e.g. [ArduPilot][apm])
+  - Communication with autopilot via serial port, UDP or TCP (e.g. [PX4 Pro][px4] or [ArduPilot][apm])
   - Internal proxy for Ground Control Station (serial, UDP, TCP)
   - [mavlink\_ros][mlros] compatible ROS topics (Mavlink.msg)
   - Plugin system for ROS-MAVLink translation
@@ -57,11 +57,14 @@ Coordinate frames
 -----------------
 
 MAVROS does translate Aerospace NED frames, used in FCUs to ROS ENU frames and vice-versa.
-For translate we simply apply rotation 180° abount ROLL (X) axis.
+For translate airframe related data we simply apply rotation 180° abount ROLL (X) axis.
+For local we apply 180° about ROLL (X) and 90° about YAW (Z) axes.
+Plase read documents from issue #473 for additional information.
 
 All the conversions are handled in `src/lib/uas_frame_conversions.cpp` and `src/lib/uas_quaternion_utils.cpp` and tested in `test/test_frame_conversions.cpp` and `test/test_quaternion_utils.cpp` respectively.
 
-Related issues: [#49 (outdated)][iss49], [#216 (outdated)][iss216], [#317][iss317], [#319][iss319], [#321][iss321].
+Related issues: [#49 (outdated)][iss49], [#216 (outdated)][iss216], [#317 (outdated)][iss317], [#319 (outdated)][iss319], [#321 (outdated)][iss321], [#473][iss473].
+Documents: [Frame Conversions][iss473rfc], [Mavlink coordinate frames][iss473table].
 
 
 Programs
@@ -71,37 +74,34 @@ Programs
 
 Main node. Allow disable GCS proxy by setting empty URL.
 
-Run example:
+Run example (autopilot connected via USB at 921600 baud, GCS running on the host with IP 172.16.254.1):
 
-    rosrun mavros mavros_node _fcu_url:=/dev/ttyACM0:115200 _gcs_url:=tcp-l://
-
+    rosrun mavros mavros_node _fcu_url:=/dev/ttyACM0:921600 _gcs_url:=udp://@172.16.254.1
 
 ### gcs\_bridge -- additional proxy
 
 Allows you to add a channel for GCS.
 For example if you need to connect one GCS for HIL and the second on the tablet.
 
-Previous name: `ros_udp`.
+Example (SITL & QGroundControl):
 
-Example (HIL & DroidPlanner):
+    rosrun mavros mavros_node _gcs_url:='udp://:14556@172.16.254.129:14551' &
+    rosrun mavros gcs_bridge _gcs_url:='udp://@172.16.254.129'
 
-    rosrun mavros mavros_node _gcs_url:='udp://:14556@hil-host:14551' &
-    rosrun mavros gcs_bridge _gcs_url:='udp://@nexus7'
 
-<!-- scripts moved to ROS wiki -->
 
 
 Launch Files
 ------------
 
-Launch files are provided for use with common FCUs:
+Launch files are provided for use with common FCUs, in particular [Pixhawk](pixhawk):
 
-  * [px4.launch](launch/px4.launch) -- for use with the PX4 native flight stack
+  * [px4.launch](launch/px4.launch) -- for use with the PX4 Pro flight stack (for VTOL, multicopters and planes)
   * [apm.launch](launch/apm.launch) -- for use with APM flight stacks (e.g., all versions of ArduPlane, ArduCopter, etc)
 
 Examples:
 
-    roslaunch mavros px4.launch
+    roslaunch mavros px4.launch 
     roslaunch mavros apm.launch fcu_url:=tcp://localhost gcs_url:=udp://@
 
 
@@ -122,7 +122,7 @@ Just use `apt-get` for installation:
 Use `wstool` utility for retriving sources and [`catkin` tool][catkin] for build.
 
 ```sh
-sudo apt-get install python-catkin-tools
+sudo apt-get install python-catkin-tools python-rosinstall-generator
 
 # 1. unneded if you already has workspace
 mkdir -p ~/catkin_ws/src
@@ -171,10 +171,11 @@ Contributing
 6. Apply the changes by commiting (`git commit -m "<message>"` or `git commit -a` and then write message; if adding new files: `git add <path/to/file.ext>`);
 7. Check code style `uncrustify -c ${ROS_WORKSPACE}/mavros/mavros/tools/uncrustify-cpp.cfg --replace --no-backup <path/to/file.ext>`;
 8. Fix small code style errors and typos;
-9. Run tests:
+9. Commit with description like "uncrustify" or "code style fix". Please avoid changes in program logic (separate commit are better than mix of style and bug fix);
+10. Run tests:
  - with `catkin_make`, issue `catkin_make tests` and then `catkin_make run_tests`;
  - with `catkin tools`, issue `catkin run_tests`;
-10. If everything goes as planned, push the changes (`git push -u <remote_repo> <feature_branch>`) and issue a pull request.
+11. If everything goes as planned, push the changes (`git push -u <remote_repo> <feature_branch>`) and issue a pull request.
 
 
 Glossary
@@ -190,18 +191,20 @@ Links
 
   - [MAVLink][ml] -- communication protocol
   - [mavlink\_ros][mlros] -- original ROS node (few messages, no proxy)
+  - [Pixhawk][pixhawk] -- Reference hardware platform
+  - [PX4][px4] -- Reference implementation in the academic community
   - [ArduPilot][apm] -- tested autopilot APM:Plane (default command set)
-  - [QGroundControl][qgc] -- tested ground control station for linux
-  - [DroidPlanner][dp] -- tested GCS for Android
+  - [QGroundControl][qgc] -- tested ground control station for Android, iOS, Mac OS, Linux and Windows
   - [mavros\_extras][mrext] -- extra plugins & node for mavros
 
 
 [qgc]: http://qgroundcontrol.org/
+[pixhawk]: http://pixhawk.org/
+[px4]: http://px4.io/
 [apm]: http://ardupilot.com/
 [mlros]: https://github.com/mavlink/mavlink_ros
 [boost]: http://www.boost.org/
 [ml]: http://mavlink.org/mavlink/start
-[dp]: https://github.com/arthurbenemann/droidplanner/
 [mlgbp]: https://github.com/mavlink/mavlink-gbp-release
 [iss35]: https://github.com/mavlink/mavros/issues/35
 [iss49]: https://github.com/mavlink/mavros/issues/49
@@ -209,8 +212,11 @@ Links
 [iss317]: https://github.com/mavlink/mavros/issues/317
 [iss319]: https://github.com/mavlink/mavros/issues/319
 [iss321]: https://github.com/mavlink/mavros/issues/321
+[iss473]: https://github.com/mavlink/mavros/issues/473
 [wiki]: http://wiki.ros.org/mavros
 [mrext]: https://github.com/mavlink/mavros/tree/master/mavros_extras
 [mlwiki]: http://wiki.ros.org/mavlink
 [shadow]: http://packages.ros.org/ros-shadow-fixed/ubuntu/pool/main/r/ros-jade-mavlink/
 [catkin]: https://catkin-tools.readthedocs.org/en/latest/
+[iss473rfc]: https://docs.google.com/document/d/1bDhaozrUu9F915T58WGzZeOM-McyU20dwxX-NRum1KA/edit
+[iss473table]: https://docs.google.com/spreadsheets/d/1LnsWTblU92J5_SMinTvBvHJWx6sqvzFa8SKbn8TXlnU/edit#gid=0

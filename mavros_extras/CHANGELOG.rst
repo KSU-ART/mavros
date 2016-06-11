@@ -2,6 +2,46 @@
 Changelog for package mavros_extras
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.17.3 (2016-05-20)
+-------------------
+
+0.17.2 (2016-04-29)
+-------------------
+
+0.17.1 (2016-03-28)
+-------------------
+* ran uncrustify
+* fixed typos
+* use CUBE_LIST for faster rendering
+* limit track size
+* use local variable
+* fixed indentation
+* added rc modes
+* moved rc to rc_override_control()
+* replaced tabulations with spaces (4)
+* introducing RC modes
+* fixed
+* quality added
+* added visualization for local setpoints
+* Contributors: Joey Gong, francois
+
+0.17.0 (2016-02-09)
+-------------------
+* rebased with master
+* ran uncrustify
+* removed duplicate include
+* use MarkerArray for vehicle model
+* Updated frame transformations and added odom publisher to local position plugin
+* Contributors: Eddy, francois
+
+0.16.6 (2016-02-04)
+-------------------
+* extras: uncrustify
+* added tf
+* comments
+* configurable vehicle model
+* Contributors: Vladimir Ermakov, francois
+
 0.16.5 (2016-01-11)
 -------------------
 
